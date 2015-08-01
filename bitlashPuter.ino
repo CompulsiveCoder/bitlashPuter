@@ -29,7 +29,7 @@ SWTFT tft;
 int lineNumber = 0;
 int columnNumber = 0;
 
-bool isVerbose = true;
+bool isVerbose = false;
 
 int lineHeight = 10;
 int columnWidth = 6;
@@ -149,7 +149,6 @@ void writeText(char* text)
 
 void beginTFT()
 {
-
   tft.reset();
 
   uint16_t identifier = tft.readID();
