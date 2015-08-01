@@ -15,12 +15,12 @@
 #define WHITE   0xFFFF
 
 // uno
-//const int DataPin = 3;
-//const int IRQpin =  2;
+//const int keyboardDataPin = 3;
+//const int keyboardIrqPin =  2;
 
 // mega
-const int DataPin = 21;
-const int IRQpin =  20;
+const int keyboardDataPin = 21;
+const int keyboardIrqPin =  20;
 
 PS2Keyboard keyboard;
 
@@ -45,7 +45,7 @@ void setup(void) {
 
   setOutputHandler(&serialHandler);
 
-  keyboard.begin(DataPin, IRQpin);
+  keyboard.begin(keyboardDataPin, keyboardIrqPin);
 
   beginTFT();
 
@@ -63,61 +63,45 @@ void loop(void) {
 
     bool isSpecial = false;
 
-    // read the next key
     char c = keyboard.read();
 
-    // check for some of the special keys
     if (c == PS2_ENTER) {
       Serial.println();
       newLine();
-      isSpecial = true;
     } 
     else if (c == PS2_TAB) {
       Serial.print("[Tab]");
-      isSpecial = true;
     } 
     else if (c == PS2_ESC) {
       Serial.print("[ESC]");
-      isSpecial = true;
     } 
     else if (c == PS2_PAGEDOWN) {
       Serial.print("[PgDn]");
-      isSpecial = true;
     } 
     else if (c == PS2_PAGEUP) {
       Serial.print("[PgUp]");
-      isSpecial = true;
     } 
     else if (c == PS2_LEFTARROW) {
       Serial.print("[Left]");
-      isSpecial = true;
     } 
     else if (c == PS2_RIGHTARROW) {
       Serial.print("[Right]");
-      isSpecial = true;
     } 
     else if (c == PS2_UPARROW) {
       Serial.print("[Up]");
-      isSpecial = true;
     } 
     else if (c == PS2_DOWNARROW) {
       Serial.print("[Down]");
-      isSpecial = true;
     } 
     else if (c == PS2_DELETE) {
-      Serial.print("[Del]");
-      isSpecial = true;
-      del();
+      Serial.print("[backspace]");
+      backspace();
     } 
     else {
-
-      // otherwise, just print all normal characters
       // Serial.print(c);
     }
 
     doCharacter(c);
-    //if (!isSpecial)
-    //  previousCharacter = c;
   }
 
 }
@@ -209,7 +193,7 @@ void serialHandler(byte b) {
   }
 }
 
-void del()
+void backspace()
 {
   char previousCharacter = currentLineText[currentLineText.length() -1];
 
@@ -221,7 +205,7 @@ void del()
     Serial.print("Current line text before: '");
     Serial.print(currentLineText);
     Serial.println("'");
-    Serial.print("Current line length: ");
+    Serial.print("Current line length before: ");
     Serial.println(currentLineText.length());
 
     Serial.print("Previous character: ");
@@ -233,7 +217,6 @@ void del()
   tft.print(previousCharacter);
   columnNumber -= 2;
   tft.setTextColor(WHITE);
-
 
   currentLineText = currentLineText.substring(0, currentLineText.length() - 1);
   currentLineText.trim();
